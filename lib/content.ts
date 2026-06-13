@@ -5,7 +5,7 @@
 
 export const profile = {
   name: "Ibrahem Elsherif",
-  role: "AI Systems Engineer",
+  role: "AI Engineer",
   tagline:
     "I ship production AI tools for real users — not research papers. Internal RAG systems, fine-tuned Arabic LLMs, and multi-modal edge inference for human–robot interaction.",
   location: "Dammam, Saudi Arabia",
@@ -154,7 +154,7 @@ export const skillGroups: SkillGroup[] = [
 
 export const about = {
   paragraphs: [
-    "I'm an AI Systems Engineer who ships production tools for real users, not research papers — RAG systems, fine-tuned Arabic LLMs, and multi-modal edge inference that actually runs.",
+    "I'm an AI Engineer who ships production tools for real users — not just research papers. RAG systems, AI agents, fine-tuned Arabic LLMs, and multi-modal edge inference that actually runs.",
     "As an AI instructor I'm in daily contact with students, instructors, and administrators, which keeps me sharp at explaining transformers, vector databases, and quantization to non-technical audiences in 30 seconds.",
     "I work AI-native — Claude Code and Cursor for tight problem → spec → working-prototype loops. Fluent in Arabic and English (C2), with an AWS AI Practitioner certification.",
   ],

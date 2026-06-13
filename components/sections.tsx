@@ -54,7 +54,7 @@ function Stamp() {
         </defs>
         <text className="fill-ink font-mono text-[14px] font-semibold uppercase tracking-[0.28em]">
           <textPath href="#stamp-curve">
-            Applied AI · Machine Learning · Shipping ·
+            AI Engineer · Machine Learning · AI Engineering ·
           </textPath>
         </text>
       </svg>
