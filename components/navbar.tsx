@@ -1,10 +1,11 @@
 import { ButtonLink } from "@/components/ui/brutal";
 
+// Section links are absolute (`/#…`) so they work from any page, not just home.
 const LINKS = [
-  { href: "#projects", label: "Projects" },
-  { href: "#experience", label: "Experience" },
-  { href: "#skills", label: "Skills" },
-  { href: "#about", label: "About" },
+  { href: "/#projects", label: "Projects" },
+  { href: "/#experience", label: "Experience" },
+  { href: "/#skills", label: "Skills" },
+  { href: "/blog/", label: "Blog" },
 ];
 
 export function Navbar() {
@@ -12,7 +13,7 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 border-b-[3px] border-ink bg-background/90 backdrop-blur-sm">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-3 px-4 sm:px-6">
         <a
-          href="#top"
+          href="/"
           className="group flex shrink-0 items-center gap-2"
           aria-label="Home"
         >
@@ -36,7 +37,7 @@ export function Navbar() {
               </a>
             ))}
           </div>
-          <ButtonLink href="#contact" tone="red" className="px-4 py-2.5 text-xs">
+          <ButtonLink href="/#contact" tone="red" className="px-4 py-2.5 text-xs">
             Contact
           </ButtonLink>
         </div>

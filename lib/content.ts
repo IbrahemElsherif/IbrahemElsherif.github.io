@@ -110,7 +110,7 @@
       ],
     },
     {
-      role: "Machine Learning Engineer",
+    role: "sr",
       company: "Upwork (Freelance)",
       period: "Jul 2024 — Present",
       location: "Remote",

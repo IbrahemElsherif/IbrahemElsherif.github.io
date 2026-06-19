@@ -105,3 +105,190 @@ body {
     animation: none;
   }
 }
+
+/* ── Blog prose ─────────────────────────────────────────────── */
+/* Styles for build-time-rendered Markdown (app/blog/[slug]). */
+
+.prose {
+  color: rgba(26, 23, 20, 0.85);
+  font-size: 1.05rem;
+  line-height: 1.78;
+}
+.prose > * + * {
+  margin-top: 1.25em;
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  color: var(--ink);
+}
+.prose h2 {
+  font-size: 1.9rem;
+  margin-top: 2.2em;
+}
+.prose h3 {
+  font-size: 1.4rem;
+  margin-top: 1.8em;
+}
+.prose h4 {
+  font-size: 1.15rem;
+  margin-top: 1.6em;
+}
+
+.prose a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+.prose a:hover {
+  color: var(--accent-dark);
+}
+.prose strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.4em;
+}
+.prose ul {
+  list-style: none;
+  padding-left: 0;
+}
+.prose ul > li {
+  position: relative;
+  padding-left: 1.5em;
+}
+.prose ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0.15em;
+  top: 0.72em;
+  width: 0.42rem;
+  height: 0.42rem;
+  transform: rotate(45deg);
+  background: var(--accent);
+}
+.prose ol {
+  list-style: decimal;
+}
+.prose li + li {
+  margin-top: 0.4em;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--accent);
+  padding: 0.5em 0 0.5em 1.1em;
+  font-style: italic;
+  color: rgba(26, 23, 20, 0.72);
+  background: rgba(224, 39, 27, 0.05);
+}
+
+.prose img {
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+}
+.prose hr {
+  border: none;
+  border-top: 2px solid rgba(26, 23, 20, 0.15);
+}
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.prose th,
+.prose td {
+  border: 2px solid var(--ink);
+  padding: 0.5em 0.8em;
+  text-align: left;
+}
+.prose th {
+  background: var(--card);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Inline code */
+.prose code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.88em;
+  background: var(--card);
+  border: 1.5px solid rgba(26, 23, 20, 0.25);
+  border-radius: 6px;
+  padding: 0.1em 0.4em;
+}
+
+/* Fenced code blocks */
+.prose pre {
+  background: var(--ink);
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  padding: 1.1em 1.3em;
+  overflow-x: auto;
+  box-shadow: 5px 5px 0 var(--ink);
+}
+.prose pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1.65;
+  color: #f3ead6;
+}
+
+/* highlight.js tokens — warm theme tuned to the site palette. */
+.hljs-comment,
+.hljs-quote {
+  color: #938875;
+  font-style: italic;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name {
+  color: #ff9180;
+}
+.hljs-string,
+.hljs-attr,
+.hljs-template-tag,
+.hljs-addition {
+  color: #ffcf2e;
+}
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-type,
+.hljs-params {
+  color: #87b6ff;
+}
+.hljs-title,
+.hljs-section,
+.hljs-title.function_ {
+  color: #9fe88d;
+}
+.hljs-meta,
+.hljs-symbol,
+.hljs-attribute {
+  color: #c9a3ff;
+}
+.hljs-deletion {
+  color: #ff9180;
+}
+.hljs-emphasis {
+  font-style: italic;
+}
+.hljs-strong {
+  font-weight: 700;
+}
