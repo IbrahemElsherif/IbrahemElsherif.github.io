@@ -1,27 +1,10 @@
-import { Navbar } from "@/components/navbar";
-import {
-  About,
-  Contact,
-  Experience,
-  Footer,
-  Hero,
-  Projects,
-  Skills,
-} from "@/components/sections";
+import { Shell } from "@/components/shell";
+import { PortfolioSections } from "@/components/sections";
 
 export default function Home() {
   return (
-    <>
-      <Navbar />
-      <main className="flex-1">
-        <Hero />
-        <Projects />
-        <Experience />
-        <Skills />
-        <About />
-        <Contact />
-      </main>
-      <Footer />
-    </>
+    <Shell lang="en">
+      <PortfolioSections lang="en" />
+    </Shell>
   );
 }

@@ -13,14 +13,8 @@ import {
   IconMail,
   IconSpark,
 } from "@/components/icons";
-import {
-  about,
-  experience,
-  profile,
-  projects,
-  skillGroups,
-  stats,
-} from "@/lib/content";
+import { getContent } from "@/lib/content";
+import { ui, localeBase, type Locale } from "@/lib/i18n";
 
 function Section({
   id,
@@ -38,6 +32,20 @@ function Section({
     >
       {children}
     </section>
+  );
+}
+
+/** All home-page sections in order — used as the <main> content per locale. */
+export function PortfolioSections({ lang }: { lang: Locale }) {
+  return (
+    <>
+      <Hero lang={lang} />
+      <Projects lang={lang} />
+      <Experience lang={lang} />
+      <Skills lang={lang} />
+      <About lang={lang} />
+      <Contact lang={lang} />
+    </>
   );
 }
 
@@ -65,13 +73,17 @@ function Stamp() {
   );
 }
 
-export function Hero() {
+export function Hero({ lang }: { lang: Locale }) {
+  const t = ui[lang];
+  const { profile, stats } = getContent(lang);
+  const base = localeBase(lang);
+
   return (
     <div id="top" className="relative overflow-hidden border-b-[3px] border-ink bg-dotgrid">
       <Section className="relative py-20 sm:py-28">
-        {/* Floating stamp, overlapping the headline on large screens. */}
+        {/* Floating stamp — `end-*` mirrors to the start side in RTL. */}
         <div
-          className="reveal pointer-events-none absolute right-4 top-10 hidden -rotate-12 sm:block lg:right-6"
+          className="reveal pointer-events-none absolute end-4 top-10 hidden -rotate-12 sm:block lg:end-6"
           style={{ animationDelay: "0.5s" }}
         >
           <Stamp />
@@ -87,29 +99,20 @@ export function Hero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-accent opacity-60" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-accent" />
               </span>
-              Available for new projects
+              {t.hero.available}
             </Tag>
           </span>
 
           <h1 className="font-display text-5xl font-extrabold leading-[0.92] tracking-[-0.02em] text-ink sm:text-7xl">
-            <span
-              className="reveal block"
-              style={{ animationDelay: "0.12s" }}
-            >
-              {profile.role}
-            </span>
-            <span
-              className="reveal block text-accent"
-              style={{ animationDelay: "0.22s" }}
-            >
-              building things
-            </span>
-            <span
-              className="reveal block"
-              style={{ animationDelay: "0.32s" }}
-            >
-              that learn.
-            </span>
+            {t.hero.headline.map((line, i) => (
+              <span
+                key={i}
+                className={`reveal block ${i === t.hero.accentLine ? "text-accent" : ""}`}
+                style={{ animationDelay: `${0.12 + i * 0.1}s` }}
+              >
+                {line}
+              </span>
+            ))}
           </h1>
 
           <p
@@ -123,12 +126,12 @@ export function Hero() {
             className="reveal mt-9 flex flex-wrap items-center gap-4"
             style={{ animationDelay: "0.52s" }}
           >
-            <ButtonLink href="#projects" tone="red">
-              View projects
+            <ButtonLink href={`${base}/#projects`} tone="red">
+              {t.hero.viewProjects}
               <IconArrowUpRight size={16} />
             </ButtonLink>
-            <ButtonLink href="#contact" tone="cream">
-              Get in touch
+            <ButtonLink href={`${base}/#contact`} tone="cream">
+              {t.hero.getInTouch}
             </ButtonLink>
           </div>
         </div>
@@ -153,12 +156,19 @@ export function Hero() {
   );
 }
 
-export function Projects() {
+export function Projects({ lang }: { lang: Locale }) {
+  const t = ui[lang];
+  const { projects } = getContent(lang);
+
   return (
     <>
       <Marquee />
       <Section id="projects" className="py-20 sm:py-28">
-        <SectionHeading eyebrow="Selected work" title="Projects" index="01" />
+        <SectionHeading
+          eyebrow={t.sections.projects.eyebrow}
+          title={t.sections.projects.title}
+          index="01"
+        />
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {projects.map((p, i) => {
             // Index numerals alternate red / blue for rhythm.
@@ -181,7 +191,7 @@ export function Projects() {
                     ) : null}
                     <a
                       href={p.href}
-                      aria-label={`Open ${p.title}`}
+                      aria-label={p.title}
                       className="shrink-0 transition-transform hover:-translate-y-0.5 hover:rotate-12 hover:text-accent"
                     >
                       <IconArrowUpRight />
@@ -195,9 +205,9 @@ export function Projects() {
                   {p.blurb}
                 </p>
                 <div className="mt-6 flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <Tag key={t} tone="white">
-                      {t}
+                  {p.tags.map((tag) => (
+                    <Tag key={tag} tone="white">
+                      {tag}
                     </Tag>
                   ))}
                 </div>
@@ -210,12 +220,15 @@ export function Projects() {
   );
 }
 
-export function Experience() {
+export function Experience({ lang }: { lang: Locale }) {
+  const t = ui[lang];
+  const { experience } = getContent(lang);
+
   return (
     <Section id="experience" className="py-20 sm:py-28">
       <SectionHeading
-        eyebrow="Where I've worked"
-        title="Experience"
+        eyebrow={t.sections.experience.eyebrow}
+        title={t.sections.experience.title}
         index="02"
         accent="blue"
       />
@@ -229,7 +242,7 @@ export function Experience() {
                 </h3>
                 <p className="mt-0.5 font-semibold text-blue">{job.company}</p>
               </div>
-              <div className="shrink-0 sm:text-right">
+              <div className="shrink-0 sm:text-end">
                 <p className="font-mono text-xs font-bold uppercase tracking-wide text-ink">
                   {job.period}
                 </p>
@@ -256,14 +269,21 @@ export function Experience() {
   );
 }
 
-export function Skills() {
+export function Skills({ lang }: { lang: Locale }) {
+  const t = ui[lang];
+  const { skillGroups } = getContent(lang);
+
   // Each group gets an alternating accent so the band isn't monochrome.
   const accents = ["text-accent", "text-blue", "text-accent", "text-blue"];
   const bullets = ["bg-accent", "bg-blue", "bg-accent", "bg-blue"];
   return (
     <div className="border-y-[3px] border-ink bg-card">
       <Section id="skills" className="py-20 sm:py-28">
-        <SectionHeading eyebrow="Toolkit" title="Skills & Stack" index="03" />
+        <SectionHeading
+          eyebrow={t.sections.skills.eyebrow}
+          title={t.sections.skills.title}
+          index="03"
+        />
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {skillGroups.map((group, gi) => (
             <Card key={group.heading} tone="cream" className="p-5">
@@ -293,10 +313,17 @@ export function Skills() {
   );
 }
 
-export function About() {
+export function About({ lang }: { lang: Locale }) {
+  const t = ui[lang];
+  const { about, profile } = getContent(lang);
+
   return (
     <Section id="about" className="py-20 sm:py-28">
-      <SectionHeading eyebrow="Background" title="About me" index="04" />
+      <SectionHeading
+        eyebrow={t.sections.about.eyebrow}
+        title={t.sections.about.title}
+        index="04"
+      />
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_300px]">
         <div className="max-w-2xl space-y-5">
           <p className="font-display text-2xl font-bold leading-snug tracking-tight text-ink">
@@ -317,14 +344,14 @@ export function About() {
         </div>
         <Card tone="card" className="h-fit p-6">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-accent">
-            Currently
+            {t.aboutCard.currently}
           </p>
           <p className="mt-2 font-display text-lg font-bold text-ink">
-            Based in {profile.location}
+            {t.aboutCard.basedIn} {profile.location}
           </p>
           <div className="my-5 h-[2px] w-full bg-ink/15" />
           <p className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-accent">
-            Find me
+            {t.aboutCard.findMe}
           </p>
           <div className="mt-3 flex gap-2.5">
             <SocialIcon href={profile.socials.github} label="GitHub">
@@ -367,28 +394,30 @@ function SocialIcon({
   );
 }
 
-export function Contact() {
+export function Contact({ lang }: { lang: Locale }) {
+  const t = ui[lang];
+  const { profile } = getContent(lang);
+
   return (
     <div className="border-t-[3px] border-ink bg-dotgrid">
       <Section id="contact" className="py-20 sm:py-28">
         <Card tone="red" radius="xl" className="relative overflow-hidden px-6 py-14 text-center sm:px-12">
           <div
             aria-hidden
-            className="pointer-events-none absolute -right-10 -top-10 spin-slow opacity-20"
+            className="pointer-events-none absolute -top-10 spin-slow opacity-20 [inset-inline-end:-2.5rem]"
           >
             <IconSpark size={120} className="text-[#fff7ee]" />
           </div>
           <p className="font-mono text-xs font-bold uppercase tracking-[0.22em] text-[#fff7ee]/80">
-            Let&apos;s talk
+            {t.contact.eyebrow}
           </p>
           <h2 className="mt-4 font-display text-4xl font-extrabold leading-[0.95] tracking-tight text-[#fff7ee] sm:text-5xl">
-            Let&apos;s build something
+            {t.contact.titleLines[0]}
             <br />
-            intelligent.
+            {t.contact.titleLines[1]}
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#fff7ee]/90">
-            Have a model to train, a pipeline to ship, or an idea worth
-            prototyping? I&apos;d love to hear about it.
+            {t.contact.body}
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <ButtonLink href={`mailto:${profile.email}`} tone="cream" external>
@@ -402,12 +431,18 @@ export function Contact() {
   );
 }
 
-export function Footer() {
+export function Footer({ lang }: { lang: Locale }) {
+  const t = ui[lang];
+  const { profile } = getContent(lang);
+  const text = t.footer.builtWith
+    .replace("{year}", String(new Date().getFullYear()))
+    .replace("{name}", profile.name);
+
   return (
     <footer className="border-t-[3px] border-ink bg-background">
       <Section className="flex flex-col items-center justify-between gap-3 py-8 sm:flex-row">
         <p className="font-mono text-xs font-semibold uppercase tracking-wide text-ink/60">
-          © {new Date().getFullYear()} {profile.name} — built with Next.js
+          {text}
         </p>
         <div className="flex gap-4">
           <a

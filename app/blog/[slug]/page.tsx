@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/sections";
+import { Shell } from "@/components/shell";
 import { Tag } from "@/components/ui/brutal";
 import { getPost, getPostSlugs, formatDate } from "@/lib/blog";
 
@@ -37,46 +36,47 @@ export default async function PostPage({
   const post = await getPost(slug);
 
   return (
-    <>
-      <Navbar />
-      <main className="flex-1">
-        <article className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
-          <Link
-            href="/blog/"
-            className="font-mono text-xs font-semibold uppercase tracking-wide text-ink/55 transition-colors hover:text-accent"
+    <Shell lang="en">
+      <article className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 sm:py-24">
+        <Link
+          href="/blog/"
+          className="font-mono text-xs font-semibold uppercase tracking-wide text-ink/55 transition-colors hover:text-accent"
+        >
+          ← Back to blog
+        </Link>
+
+        <header className="mt-6 border-b-[3px] border-ink pb-8">
+          {post.tags.length > 0 ? (
+            <div className="mb-5 flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <Tag key={tag} tone="yellow">
+                  {tag}
+                </Tag>
+              ))}
+            </div>
+          ) : null}
+
+          <h1
+            dir="auto"
+            className="font-display text-4xl font-extrabold leading-[1.0] tracking-tight text-ink sm:text-5xl"
           >
-            ← Back to blog
-          </Link>
+            {post.title}
+          </h1>
 
-          <header className="mt-6 border-b-[3px] border-ink pb-8">
-            {post.tags.length > 0 ? (
-              <div className="mb-5 flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <Tag key={tag} tone="yellow">
-                    {tag}
-                  </Tag>
-                ))}
-              </div>
-            ) : null}
+          <p className="mt-5 font-mono text-xs font-semibold uppercase tracking-wide text-ink/55">
+            {formatDate(post.date)}
+            <span className="mx-2 text-ink/25">·</span>
+            {post.readingTime}
+          </p>
+        </header>
 
-            <h1 className="font-display text-4xl font-extrabold leading-[1.0] tracking-tight text-ink sm:text-5xl">
-              {post.title}
-            </h1>
-
-            <p className="mt-5 font-mono text-xs font-semibold uppercase tracking-wide text-ink/55">
-              {formatDate(post.date)}
-              <span className="mx-2 text-ink/25">·</span>
-              {post.readingTime}
-            </p>
-          </header>
-
-          <div
-            className="prose mt-10"
-            dangerouslySetInnerHTML={{ __html: post.html }}
-          />
-        </article>
-      </main>
-      <Footer />
-    </>
+        {/* Each block carries dir="auto" (set in lib/blog.ts), so a single
+            post can freely mix Arabic and English. */}
+        <div
+          className="prose mt-10"
+          dangerouslySetInnerHTML={{ __html: post.html }}
+        />
+      </article>
+    </Shell>
   );
 }

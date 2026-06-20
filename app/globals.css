@@ -21,9 +21,11 @@
   --color-ink: var(--ink);
   --color-blue: var(--blue);
   --color-yellow: var(--yellow);
-  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-body), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono), ui-monospace, monospace;
+  /* Cairo (--ff-arabic) sits in every stack as a per-glyph fallback: Latin
+     uses the primary face, Arabic characters fall back to Cairo automatically. */
+  --font-display: var(--ff-display), var(--ff-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--ff-body), var(--ff-arabic), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--ff-mono), var(--ff-arabic), ui-monospace, monospace;
 }
 
 body {
@@ -31,6 +33,20 @@ body {
   color: var(--foreground);
   font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
   font-feature-settings: "ss01", "cv01";
+}
+
+/* ── RTL / Arabic ───────────────────────────────────────────── */
+
+/* Letter-spacing breaks Arabic's cursive joins — neutralise tracking utils. */
+[dir="rtl"] [class*="tracking-"] {
+  letter-spacing: 0;
+}
+
+/* Arabic glyphs are taller; relax the tight Latin-tuned leading on headings. */
+[dir="rtl"] h1,
+[dir="rtl"] h2,
+[dir="rtl"] h3 {
+  line-height: 1.2;
 }
 
 /* ── Atmosphere ─────────────────────────────────────────────── */
@@ -157,20 +173,20 @@ body {
 
 .prose ul,
 .prose ol {
-  padding-left: 1.4em;
+  padding-inline-start: 1.4em;
 }
 .prose ul {
   list-style: none;
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 .prose ul > li {
   position: relative;
-  padding-left: 1.5em;
+  padding-inline-start: 1.5em;
 }
 .prose ul > li::before {
   content: "";
   position: absolute;
-  left: 0.15em;
+  inset-inline-start: 0.15em;
   top: 0.72em;
   width: 0.42rem;
   height: 0.42rem;
@@ -185,8 +201,9 @@ body {
 }
 
 .prose blockquote {
-  border-left: 4px solid var(--accent);
-  padding: 0.5em 0 0.5em 1.1em;
+  border-inline-start: 4px solid var(--accent);
+  padding-block: 0.5em;
+  padding-inline-start: 1.1em;
   font-style: italic;
   color: rgba(26, 23, 20, 0.72);
   background: rgba(224, 39, 27, 0.05);
@@ -210,7 +227,7 @@ body {
 .prose td {
   border: 2px solid var(--ink);
   padding: 0.5em 0.8em;
-  text-align: left;
+  text-align: start;
 }
 .prose th {
   background: var(--card);
@@ -230,8 +247,10 @@ body {
   padding: 0.1em 0.4em;
 }
 
-/* Fenced code blocks */
+/* Fenced code blocks — always left-to-right, even inside an RTL post. */
 .prose pre {
+  direction: ltr;
+  text-align: left;
   background: var(--ink);
   border: 3px solid var(--ink);
   border-radius: 14px;

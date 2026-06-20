@@ -28,6 +28,50 @@ import rehypeStringify from "rehype-stringify";
 
 const BLOG_DIR = path.join(process.cwd(), "content", "blog");
 
+// Block-level tags that should auto-detect text direction, so a single post
+// can mix Arabic (RTL) and English (LTR) and each block orients itself.
+const AUTO_DIR_TAGS = new Set([
+  "p",
+  "h1",
+  "h2",
+  "h3",
+  "h4",
+  "h5",
+  "h6",
+  "li",
+  "blockquote",
+  "td",
+  "th",
+  "figcaption",
+  "dd",
+  "dt",
+]);
+
+/** rehype plugin: add `dir="auto"` to block-level elements. */
+function rehypeAutoDir() {
+  return (tree: unknown) => {
+    const walk = (node: {
+      type?: string;
+      tagName?: string;
+      properties?: Record<string, unknown>;
+      children?: unknown[];
+    }) => {
+      if (
+        node.type === "element" &&
+        node.tagName &&
+        AUTO_DIR_TAGS.has(node.tagName)
+      ) {
+        node.properties = node.properties ?? {};
+        if (node.properties.dir == null) node.properties.dir = "auto";
+      }
+      if (Array.isArray(node.children)) {
+        for (const child of node.children) walk(child as typeof node);
+      }
+    };
+    walk(tree as Parameters<typeof walk>[0]);
+  };
+}
+
 export type PostMeta = {
   slug: string;
   title: string;
@@ -87,6 +131,7 @@ export async function getPost(slug: string): Promise<Post> {
     .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeSlug)
+    .use(rehypeAutoDir)
     .use(rehypeHighlight)
     .use(rehypeStringify)
     .process(content);

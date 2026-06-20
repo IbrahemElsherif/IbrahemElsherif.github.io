@@ -1,9 +1,58 @@
- /**
-   * Portfolio content for Ibrahem Elsherif — sourced from resume.
-   * Edit here to update the whole site.
-   */
+/**
+ * Portfolio content for Ibrahem Elsherif — sourced from resume.
+ *
+ * English is the source of truth (`en` below). Arabic overrides go in `ar`:
+ * anything you leave out — or leave as an empty string — falls back to the
+ * English value, so the /ar/ site works immediately and you can translate
+ * incrementally. Arrays are matched by POSITION, so keep the same order (and
+ * ideally the same length) as the English arrays when translating them.
+ */
 
-  export const profile = {
+import type { Locale } from "@/lib/i18n";
+
+export type Tone = "cream" | "card" | "red" | "blue" | "yellow";
+
+export type Stat = { value: string; label: string; tone: Tone };
+export type Project = {
+  title: string;
+  blurb: string;
+  tags: string[];
+  href: string;
+  metric?: string;
+  tone?: Tone;
+};
+export type Job = {
+  role: string;
+  company: string;
+  period: string;
+  location: string;
+  points: string[];
+};
+export type SkillGroup = { heading: string; items: string[] };
+export type Profile = {
+  name: string;
+  role: string;
+  tagline: string;
+  location: string;
+  email: string;
+  phone: string;
+  socials: { github: string; linkedin: string; email: string };
+};
+export type About = { paragraphs: string[]; credentials: string[] };
+
+export type Content = {
+  profile: Profile;
+  stats: Stat[];
+  projects: Project[];
+  experience: Job[];
+  skillGroups: SkillGroup[];
+  about: About;
+};
+
+// ── English (source of truth) ──────────────────────────────────
+
+const en: Content = {
+  profile: {
     name: "Ibrahem Elsherif",
     role: "AI Engineer",
     tagline:
@@ -16,27 +65,16 @@
       linkedin: "https://linkedin.com/in/ibrahem-elsherif",
       email: "mailto:ebrahem.hesham.ahmed@gmail.com",
     },
-  } as const;
+  },
 
-  export type Tone = "cream" | "card" | "red" | "blue" | "yellow";
-
-  export const stats: { value: string; label: string; tone: Tone }[] = [
+  stats: [
     { value: "1.5s", label: "RAG time-to-first-token", tone: "yellow" },
     { value: "443", label: "tok/s via vLLM", tone: "blue" },
     { value: "97%", label: "face-recognition accuracy", tone: "red" },
     { value: "70%", label: "workflow time cut", tone: "cream" },
-  ];
+  ],
 
-  export type Project = {
-    title: string;
-    blurb: string;
-    tags: string[];
-    href: string;
-    metric?: string;
-    tone?: Tone;
-  };
-
-  export const projects: Project[] = [
+  projects: [
     {
       title: "Internal RAG Chatbot",
       blurb:
@@ -85,17 +123,9 @@
       tags: ["JavaScript", "Tailwind", "Product"],
       href: "#",
     },
-  ];
+  ],
 
-  export type Job = {
-    role: string;
-    company: string;
-    period: string;
-    location: string;
-    points: string[];
-  };
-
-  export const experience: Job[] = [
+  experience: [
     {
       role: "AI Engineer & Instructor",
       company: "Saudi Specialized Training & Learning Institute (SSTLI)",
@@ -110,7 +140,7 @@
       ],
     },
     {
-    role: "sr",
+      role: "sr",
       company: "Upwork (Freelance)",
       period: "Jul 2024 — Present",
       location: "Remote",
@@ -129,11 +159,9 @@
         "Completed a 6-month program in ML/DL, NLP, CV, Transformers, Generative AI, and Azure.",
       ],
     },
-  ];
+  ],
 
-  export type SkillGroup = { heading: string; items: string[] };
-
-  export const skillGroups: SkillGroup[] = [
+  skillGroups: [
     {
       heading: "AI / LLMs",
       items: ["PyTorch", "Transformers", "LoRA Fine-tuning", "RAG", "LangChain", "AI Agents"],
@@ -150,9 +178,9 @@
       heading: "Cloud & Edge",
       items: ["AWS (ECS/EFS/Bedrock)", "Azure", "GCP", "Jetson Nano", "Raspberry Pi"],
     },
-  ];
+  ],
 
-  export const about = {
+  about: {
     paragraphs: [
       "I'm an AI Engineer focused on systems that ship and run in production — RAG systems, AI agents, fine-tuned Arabic LLMs, and multi-modal edge inference.",
       "Teaching AI courses keeps me in daily contact with students, instructors, and admins, so I'm used to explainingtransformers, vector databases, and quantization to non-technical people quickly.",
@@ -165,4 +193,74 @@
       "ML Specialization — Stanford / DeepLearning.AI",
       "CS50x — Harvard",
     ],
-  } as const;
+  },
+};
+
+// ── Arabic overrides ───────────────────────────────────────────
+// Fill these in to translate the /ar/ site. Empty/omitted = English fallback.
+// Keep array order matching the English arrays above.
+
+type DeepPartial<T> = T extends (infer U)[]
+  ? DeepPartial<U>[]
+  : T extends object
+    ? { [K in keyof T]?: DeepPartial<T[K]> }
+    : T;
+
+const ar: DeepPartial<Content> = {
+  // profile: {
+  //   name: "إبراهيم الشريف",
+  //   role: "مهندس ذكاء اصطناعي",
+  //   tagline: "...",
+  //   location: "الدمام، السعودية",
+  // },
+  // stats: [
+  //   { label: "..." }, { label: "..." }, { label: "..." }, { label: "..." },
+  // ],
+  // projects: [
+  //   { title: "...", blurb: "...", tags: ["...", "..."], metric: "..." },
+  //   // ...one entry per project, same order as English
+  // ],
+  // experience: [
+  //   { role: "...", company: "...", period: "...", location: "...", points: ["..."] },
+  // ],
+  // skillGroups: [
+  //   { heading: "...", items: ["...", "..."] },
+  // ],
+  // about: {
+  //   paragraphs: ["...", "...", "..."],
+  //   credentials: ["...", "..."],
+  // },
+};
+
+// ── Merge (English fallback, positional for arrays) ────────────
+
+function mergeValue<T>(base: T, override: unknown): T {
+  if (override === undefined || override === null) return base;
+
+  if (Array.isArray(base)) {
+    const ov = Array.isArray(override) ? override : [];
+    return base.map((item, i) => mergeValue(item, ov[i])) as unknown as T;
+  }
+
+  if (typeof base === "object") {
+    const out = { ...(base as Record<string, unknown>) };
+    const ov = (override ?? {}) as Record<string, unknown>;
+    for (const key of Object.keys(out)) {
+      out[key] = mergeValue(out[key], ov[key]);
+    }
+    return out as T;
+  }
+
+  // Primitives: use the override only when it's a non-empty string / defined.
+  if (typeof base === "string") {
+    return (typeof override === "string" && override.length > 0
+      ? override
+      : base) as unknown as T;
+  }
+  return override as T;
+}
+
+/** Resolve the content for a locale, with English fallback for Arabic. */
+export function getContent(locale: Locale): Content {
+  return locale === "ar" ? mergeValue(en, ar) : en;
+}
